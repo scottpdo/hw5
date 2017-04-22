@@ -1,4 +1,5 @@
 import GraphicalObject from './GraphicalObject';
+import { isNil } from 'lodash';
 
 class Ellipse extends GraphicalObject {
 
@@ -6,38 +7,38 @@ class Ellipse extends GraphicalObject {
 
     super();
 
-    this.x = x;
-    this.y = y;
-    this.width = width;
-    this.height = height;
-    this.color = color;
+    this.x(x);
+    this.y(y);
+    this.width(width);
+    this.height(height);
+    this.color(color);
   }
 
   draw(context, shape) {
 
-    let g = this.getGroup();
+    let g = this.group();
     if (g == null) return;
 
 		let x = 0;
 		let y = 0;
 
-		while ( g.getGroup() !== null ) {
+		while ( !isNil(g.group()) ) {
 			x += g.getBoundingBox().x;
 			y += g.getBoundingBox().y;
-			g = g.getGroup();
+			g = g.group();
 		}
 
-		context.fillStyle = this.color;
+		context.fillStyle = this.color();
 
     context.rect(shape.x, shape.y, shape.width, shape.height);
     context.clip();
 
     context.beginPath();
 		context.ellipse(
-			x + this.getX(),
-			y + this.getY(),
-			this.getWidth() / 2,
-			this.getHeight() / 2,
+			x + this.x(),
+			y + this.y(),
+			this.width() / 2,
+			this.height() / 2,
       2 * Math.PI,
       0,
       2 * Math.PI

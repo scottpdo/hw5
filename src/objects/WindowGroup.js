@@ -5,6 +5,7 @@ import BoundaryRectangle from '../objects/BoundaryRectangle';
 import FilledRect from '../objects/FilledRect';
 import OutlineRect from '../objects/OutlineRect';
 import Ellipse from '../objects/Ellipse';
+import { isNil } from 'lodash';
 
 class WindowGroup extends Component {
 
@@ -15,12 +16,13 @@ class WindowGroup extends Component {
   }
 
   addChild(child) {
-    if (child.getGroup() !== null) {
+    console.log('adding child', child);
+    if (!isNil(child.group())) {
       throw new Error("This graphical object already has a group!");
     }
 
     this.children.push(child);
-    child.setGroup(this);
+    child.group(this);
 
     this.damage(child.getBoundingBox());
   }
@@ -36,9 +38,7 @@ class WindowGroup extends Component {
 
     this.addChild(g);
 
-    g.addChild(a);
-    g.addChild(b);
-    g.addChild(e);
+    g.addChildren(a, b, e);
 
     this.redraw();
   }
@@ -69,7 +69,7 @@ class WindowGroup extends Component {
     }
   }
 
-  getGroup() { return null; }
+  group() { return null; }
 
   getBoundingBox() {
     return new BoundaryRectangle(0, 0, this.props.width, this.props.height);

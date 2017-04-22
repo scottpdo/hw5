@@ -1,4 +1,5 @@
 import GraphicalObject from './GraphicalObject';
+import { isNil } from 'lodash';
 
 class FilledRect extends GraphicalObject {
 
@@ -6,37 +7,37 @@ class FilledRect extends GraphicalObject {
 
     super();
 
-    this.x = x;
-    this.y = y;
-    this.width = width;
-    this.height = height;
-    this.color = color;
+    this.x(x);
+    this.y(y);
+    this.width(width);
+    this.height(height);
+    this.color(color);
   }
 
   draw(context, shape) {
 
-    let g = this.getGroup();
-    if (g == null) return;
+    let g = this.group();
+    if (isNil(g)) return;
 
 		let x = 0;
 		let y = 0;
 
-		while ( g.getGroup() !== null ) {
+		while ( !isNil(g) && !isNil(g.group()) ) {
 			x += g.getBoundingBox().x;
 			y += g.getBoundingBox().y;
-			g = g.getGroup();
+			g = g.group();
 		}
 
-		context.fillStyle = this.color;
+		context.fillStyle = this.color();
 
     context.rect(shape.x, shape.y, shape.width, shape.height);
     context.clip();
 
 		context.fillRect(
-			x + this.getX(),
-			y + this.getY(),
-			this.getWidth(),
-			this.getHeight()
+			x + this.x(),
+			y + this.y(),
+			this.width(),
+			this.height()
 		);
   }
 }

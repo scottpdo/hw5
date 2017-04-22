@@ -1,14 +1,15 @@
 import BoundaryRectangle from './BoundaryRectangle';
+import { isNil } from 'lodash';
 
 class GraphicalObject {
 
-  x: number;
-  y: number;
-  width: number;
-  height: number;
+  _x: number;
+  _y: number;
+  _width: number;
+  _height: number;
 
   constructor() {
-    this.group = null;
+    this._group = null;
   }
 
   /**
@@ -16,21 +17,49 @@ class GraphicalObject {
    */
   draw(context, shape): void {}
 
-  getGroup() { return this.group; }
-  setGroup(g) { this.group = g; }
-  getWidth() { return this.width; }
-  getHeight() { return this.height; }
-  getX() { return this.x; }
-  getY() { return this.y; }
+  group(g) {
+    if (isNil(g)) return this._group;
+    this._group = g;
+  }
+
+  width(value) {
+    if (isNil(value)) return this._width;
+    this._width = value;
+  }
+
+  height(value) {
+    if (isNil(value)) return this._height;
+    this._height = value;
+  }
+
+  x(value) {
+    if (isNil(value)) return this._x;
+    this._x = value;
+  }
+
+  y(value) {
+    if (isNil(value)) return this._y;
+    this._y = value;
+  }
+
+  color(value) {
+    if (isNil(value)) return this._color;
+    this._color = value;
+  }
+
+  lineThickness(value) {
+    if (isNil(value)) return this._lineThickness;
+    this._lineThickness = value;
+  }
 
   getBoundingBox() {
-    return new BoundaryRectangle(this.x, this.y, this.width, this.height);
+    return new BoundaryRectangle(this._x, this._y, this._width, this._height);
   }
 
   update() {
     // setUpdated(true);
-		if (this.getGroup() != null) {
-      this.getGroup().damage(this.getBoundingBox());
+		if (!isNil(this.group())) {
+      this.group().damage(this.getBoundingBox());
     }
 		// shouldConstraintsTrigger();
   }

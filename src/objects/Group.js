@@ -1,33 +1,43 @@
 import GraphicalObject from './GraphicalObject';
+import { isNil } from 'lodash';
 
 class Group extends GraphicalObject {
 
   constructor(x = 0, y = 0, width = 10, height = 10) {
     super();
 
-    this.x = x;
-    this.y = y;
-    this.width = width;
-    this.height = height;
+    this.x(x);
+    this.y(y);
+    this.width(width);
+    this.height(height);
 
-    this.children = [];
+    this._children = [];
   }
 
   addChild(child) {
 
-    if (child.getGroup() !== null) {
+    if (!isNil(child.group())) {
       throw new Error("This graphical object already has a group!");
     }
 
-    this.children.push(child);
-    child.setGroup(this);
+    this._children.push(child);
+    child.group(this);
 
     this.damage(child.getBoundingBox());
   }
 
+  addChildren(children) {
+    // if children are individual args,
+    // convert to Array
+    if (!(children instanceof Array)) {
+      children = Array.prototype.slice.call(arguments);
+    }
+    children.forEach(child => this.addChild(child));
+  }
+
   damage(r) {
 
-		if (this.getGroup() === null) return;
+		if (isNil(this.group())) return;
 
 		// constrain rectangle to portion inside this group's
 		// clipping rectangle
@@ -44,11 +54,11 @@ class Group extends GraphicalObject {
 		if (r.x + r.width > bb.x + bb.width) r.width = bb.width + bb.x - r.x;
 		if (r.y + r.height > bb.y + bb.height) r.height = bb.height + bb.y - r.y;
 
-    this.getGroup().damage(r);
+    this.group().damage(r);
 	}
 
   draw(context, clipRect) {
-    this.children.forEach(gobj => {
+    this._children.forEach(gobj => {
       gobj.draw(context, clipRect);
     });
   }
