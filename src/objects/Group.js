@@ -1,4 +1,5 @@
 import GraphicalObject from './GraphicalObject';
+import BoundaryRectangle from './BoundaryRectangle';
 import { isNil } from 'lodash';
 
 class Group extends GraphicalObject {
@@ -20,7 +21,7 @@ class Group extends GraphicalObject {
       throw new Error("This graphical object already has a group!");
     }
 
-    this._children.push(child);
+    this.children().push(child);
     child.group(this);
 
     this.damage(child.getBoundingBox());
@@ -35,7 +36,9 @@ class Group extends GraphicalObject {
     children.forEach(child => this.addChild(child));
   }
 
-  damage(r) {
+  children() { return this._children; }
+
+  damage(r: BoundaryRectangle) {
 
 		if (isNil(this.group())) return;
 
@@ -50,7 +53,6 @@ class Group extends GraphicalObject {
 		if (r.x < bb.x) r.x = bb.x;
 		if (r.y < bb.y) r.y = bb.y;
 
-		// TODO: check for off by 1?
 		if (r.x + r.width > bb.x + bb.width) r.width = bb.width + bb.x - r.x;
 		if (r.y + r.height > bb.y + bb.height) r.height = bb.height + bb.y - r.y;
 
@@ -58,8 +60,11 @@ class Group extends GraphicalObject {
 	}
 
   draw(context, clipRect) {
-    this._children.forEach(gobj => {
-      gobj.draw(context, clipRect);
+    this.children().forEach(gobj => {
+      const r = gobj.getBoundingBox();
+      if (r.intersects(clipRect)) {
+        gobj.draw(context, clipRect);
+      }
     });
   }
 }

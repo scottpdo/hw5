@@ -1,4 +1,5 @@
 import GraphicalObject from './GraphicalObject';
+import BoundaryRectangle from './BoundaryRectangle';
 import { isNil } from 'lodash';
 
 class Ellipse extends GraphicalObject {
@@ -15,6 +16,8 @@ class Ellipse extends GraphicalObject {
   }
 
   draw(context, shape) {
+    
+    this.contextBegin(context, shape);
 
     let g = this.group();
     if (g == null) return;
@@ -30,9 +33,6 @@ class Ellipse extends GraphicalObject {
 
 		context.fillStyle = this.color();
 
-    context.rect(shape.x, shape.y, shape.width, shape.height);
-    context.clip();
-
     context.beginPath();
 		context.ellipse(
 			x + this.x(),
@@ -43,8 +43,43 @@ class Ellipse extends GraphicalObject {
       0,
       2 * Math.PI
 		);
-
     context.fill();
+
+    this.contextEnd(context, shape);
+  }
+
+  //@Override
+  contains(x, y): Boolean {
+    if (isNil(this.group())) return false;
+    x += this.width() / 2;
+    y += this.height() / 2;
+    return x >= this.group().getBoundingBox().x + this.x() &&
+				   x < this.group().getBoundingBox().x + this.x() + this.width() &&
+				   y >= this.group().getBoundingBox().y + this.y() &&
+				   y < this.group().getBoundingBox().y + this.y() + this.height();
+  }
+
+  //@Override
+  getBoundingBox() {
+    return new BoundaryRectangle(
+      this.x() - this.width() / 2,
+      this.y() - this.height() / 2,
+      this.width(),
+      this.height()
+    );
+  }
+
+  //@Override
+  moveTo(x, y) {
+
+    if (!isNil(this.group())) {
+      this.group().damage(this.getBoundingBox());
+    }
+
+    this.x(x + this.width() / 2);
+    this.y(y + this.height() / 2);
+
+    this.update();
   }
 }
 

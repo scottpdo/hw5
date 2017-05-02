@@ -16,13 +16,15 @@ class FilledRect extends GraphicalObject {
 
   draw(context, shape) {
 
+    this.contextBegin(context, shape);
+
     let g = this.group();
     if (isNil(g)) return;
 
 		let x = 0;
 		let y = 0;
 
-		while ( !isNil(g) && !isNil(g.group()) ) {
+		while ( !isNil(g.group()) ) {
 			x += g.getBoundingBox().x;
 			y += g.getBoundingBox().y;
 			g = g.group();
@@ -30,15 +32,14 @@ class FilledRect extends GraphicalObject {
 
 		context.fillStyle = this.color();
 
-    context.rect(shape.x, shape.y, shape.width, shape.height);
-    context.clip();
-
 		context.fillRect(
 			x + this.x(),
 			y + this.y(),
 			this.width(),
 			this.height()
 		);
+
+    this.contextEnd(context, shape);
   }
 }
 

@@ -17,6 +17,8 @@ class OutlineRect extends GraphicalObject {
 
   draw(context, shape) {
 
+    this.contextBegin(context, shape);
+
     let g = this.group();
     if (isNil(g)) return;
 
@@ -34,15 +36,14 @@ class OutlineRect extends GraphicalObject {
 		context.fillStyle = this.color();
     context.lineWidth = this.lineThickness();
 
-		context.rect(shape.x, shape.y, shape.width, shape.height);
-    context.clip();
-
 		context.strokeRect(
 			x + this.x() + strokeOffset,
 			y + this.y() + strokeOffset,
 			this.width() - 2 * strokeOffset,
 			this.height() - 2 * strokeOffset
 		);
+
+    this.contextEnd(context, shape);
   }
 }
 
