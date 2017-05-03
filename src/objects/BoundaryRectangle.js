@@ -18,8 +18,6 @@ class BoundaryRectangle {
 
     if (rect == null) return;
 
-    console.log('adding rect', rect);
-
     const minX = Math.min(this.x, rect.x);
     const minY = Math.min(this.y, rect.y);
     const maxX = Math.max(this.x + this.width, rect.x + rect.width);
@@ -30,8 +28,6 @@ class BoundaryRectangle {
     this.y = minY;
     this.width = maxX - minX;
     this.height = maxY - minY;
-
-    console.log('added to this', this);
 
   }
 }

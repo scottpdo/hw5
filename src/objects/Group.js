@@ -36,7 +36,18 @@ class Group extends GraphicalObject {
     children.forEach(child => this.addChild(child));
   }
 
-  children() { return this._children; }
+  children(i) {
+    if (!isNil(i)) return this._children[i];
+    return this._children;
+  }
+
+  bringChildToFront(child) {
+
+		this.children().splice(this.children().indexOf(child), 1);
+		this.addChild(child);
+
+		this.damage(child.getBoundingBox());
+	}
 
   damage(r: BoundaryRectangle) {
 
@@ -60,11 +71,19 @@ class Group extends GraphicalObject {
 	}
 
   draw(context, clipRect) {
+
+    // for debugging...
+    // context.save();
+    // context.strokeRect(this.x(), this.y(), this.width(), this.height());
+    // context.restore();
+
+    context.save();
+    context.rect(this.x(), this.y(), this.width(), this.height());
+    context.clip();
+    context.restore();
+
     this.children().forEach(gobj => {
-      const r = gobj.getBoundingBox();
-      if (r.intersects(clipRect)) {
-        gobj.draw(context, clipRect);
-      }
+      gobj.draw(context, clipRect);
     });
   }
 }

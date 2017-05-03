@@ -41,31 +41,37 @@ class GraphicalObject {
   width(value) {
     if (isNil(value)) return this._width;
     this._width = value;
+    this.update();
   }
 
   height(value) {
     if (isNil(value)) return this._height;
     this._height = value;
+    this.update();
   }
 
   x(value) {
     if (isNil(value)) return this._x;
     this._x = value;
+    this.update();
   }
 
   y(value) {
     if (isNil(value)) return this._y;
     this._y = value;
+    this.update();
   }
 
   color(value) {
     if (isNil(value)) return this._color;
     this._color = value;
+    this.update();
   }
 
   lineThickness(value) {
     if (isNil(value)) return this._lineThickness;
     this._lineThickness = value;
+    this.update();
   }
 
   getBoundingBox() {
@@ -96,10 +102,12 @@ class GraphicalObject {
       this.group().damage(this.getBoundingBox());
     }
 
+    // console.log('moving', this);
+    // console.log('was at', this.x(), ', ', this.y());
+    // console.log('now to', x, ', ', y);
+
 		this.x(x);
 		this.y(y);
-
-		this.update();
   }
 
   // TODO
@@ -109,6 +117,34 @@ class GraphicalObject {
     //
     //   );
     // });
+  }
+
+  selectedBehavior(value) {
+    if (isNil(value)) return this._selectedBehavior;
+    this._selectedBehavior = value;
+  }
+
+  selectable(value) {
+    if (isNil(value)) return this._selectable;
+    this._selectable = value;
+  }
+
+  selected(selected) {
+
+    if (isNil(selected)) return this._selected;
+		this._selected = selected;
+
+		// activate or deactivate behavior
+		if (!isNil(this.selectedBehavior())) {
+			this.selectedBehavior().active(selected);
+		}
+    this.update();
+	}
+
+  interimSelected(value) {
+    if (isNil(value)) return this._interimSelected;
+    this._interimSelected = value;
+    this.update();
   }
 }
 

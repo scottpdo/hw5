@@ -1,14 +1,5 @@
 import React, { Component } from 'react';
-
-import Group from '../objects/Group';
 import BoundaryRectangle from '../objects/BoundaryRectangle';
-import FilledRect from '../objects/FilledRect';
-import OutlineRect from '../objects/OutlineRect';
-import Ellipse from '../objects/Ellipse';
-import Circle from '../objects/Circle';
-import Text from '../objects/Text';
-
-import MoveBehavior from '../behaviors/MoveBehavior';
 
 import { isNil } from 'lodash';
 
@@ -43,41 +34,8 @@ class WindowGroup extends Component {
   }
 
   componentDidMount() {
-
     this.addEventListeners();
-
-    // add objects
-
-    this.context = this.refs.canvas.getContext('2d');
-
-    let g = new Group(0, 0, 600, 400);
-    let a = new FilledRect(20, 20, 60, 30, 'orange');
-    let b = new OutlineRect(30, 30, 120, 30, 'black', 5);
-    let e = new Ellipse(0, 0, 40, 80, 'blue');
-    let c = new Circle(80, 80, 20, 'green');
-    let t = new Text({
-      text: "Hello, world!",
-      x: 10,
-      y: 10,
-      fontSize: 50,
-      fontFamily: 'sans-serif',
-      context: this.context
-    });
-
-    this.addChild(g);
-
-    g.addChildren(a, b, e, c, t);
-
-    let m = new MoveBehavior(this);
-    m.group(g);
-    this.addBehavior(m);
-
     this.redraw();
-
-    // setInterval(() => {
-    //   c.moveTo(c.x() + 5, 100);
-    //   this.redraw();
-    // }, 3000);
   }
 
   addEventListeners() {
@@ -95,7 +53,7 @@ class WindowGroup extends Component {
       // If a behavior is running...
       if (b.state()) {
 
-        // If it should stop, then stop.
+        // If it should cancel or stop, then do that.
         if (b.cancelKey() === e.keyCode) {
           b.cancel(e);
         } else if (b.stopEvent() === e.type) {
@@ -132,10 +90,7 @@ class WindowGroup extends Component {
     if (savedClipRect !== null) {
       this.clear(savedClipRect);
       this.children.forEach(gobj => {
-        const r = gobj.getBoundingBox();
-        if (r.intersects(savedClipRect)) {
-          gobj.draw(this.context, savedClipRect);
-        }
+        gobj.draw(this.context, savedClipRect);
       });
       this.savedClipRect = null;
     } else {

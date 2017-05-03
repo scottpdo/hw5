@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
 import './App.css';
 
-import WindowGroup from './objects/WindowGroup';
+import HW3 from './default/HW3';
 
 class App extends Component {
   render() {
-    return <WindowGroup width="600" height="400" />;
+    return <HW3 width="1000" height="700" />;
   }
 }
 
