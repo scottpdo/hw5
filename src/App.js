@@ -13,7 +13,7 @@ class App extends Component {
     super();
 
     this.state = {
-      view: "HW4B"
+      view: "HW2"
     };
 
     this.toggle = this.toggle.bind(this);
