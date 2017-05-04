@@ -1,11 +1,10 @@
-import FilledRect from '../objects/FilledRect';
-import OutlineRect from '../objects/OutlineRect';
+import Line from '../objects/Line';
 import Behavior from './Behavior';
 import { isNil } from 'lodash';
 
-class NewRectBehavior extends Behavior {
+class NewLineBehavior extends Behavior {
 
-  constructor(windowgroup, color, lineThickness = 0) {
+  constructor(windowgroup, color = 'black', lineThickness = 1) {
 
     super(windowgroup);
 
@@ -17,19 +16,15 @@ class NewRectBehavior extends Behavior {
   }
 
   make(x1, y1, x2, y2) {
-    if (this._lineThickness === 0) {
-			return new FilledRect(x1, y1, x2 - x1, y2 - y1, this._color);
-		}
-
-		return new OutlineRect(x1, y1, x2 - x1, y2 - y1, this._color, this._lineThickness);
+    return new Line(x1, y1, x2, y2, this._color, this._lineThickness);
   }
 
   resize(obj, x1, y1, x2, y2) {
 
-    obj.x(x1);
-    obj.y(y1);
-    obj.width(x2 - x1);
-    obj.height(y2 - y1);
+    obj.x1(x1);
+    obj.y1(y1);
+    obj.x2(x2);
+    obj.y2(y2);
 
     return obj;
   }
@@ -41,10 +36,10 @@ class NewRectBehavior extends Behavior {
 
 		const bb = g.getBoundingBox();
 		const pivot = { x: e.x - bb.x, y: e.y - bb.y };
-		const r = this.make(pivot.x, pivot.y, pivot.x, pivot.y);
+		const l = this.make(pivot.x, pivot.y, pivot.x, pivot.y);
 
-		g.addChild(r);
-		this._activeObject = r;
+		g.addChild(l);
+		this._activeObject = l;
     this._pivot = pivot;
 		this.state(true);
   }
@@ -57,16 +52,15 @@ class NewRectBehavior extends Behavior {
 
     const bb = g.getBoundingBox();
 
-    // ensure that x1, y1 <= x2, y2
 		const x = e.x - bb.x;
 		const y = e.y - bb.y;
 
 		this._activeObject = this.resize(
 			this._activeObject,
-			Math.min(this._pivot.x, x),
-			Math.min(this._pivot.y, y),
-			Math.max(this._pivot.x, x),
-			Math.max(this._pivot.y, y)
+			this._pivot.x,
+			this._pivot.y,
+			x,
+			y
 		);
 
     this.windowgroup.redraw();
@@ -96,4 +90,4 @@ class NewRectBehavior extends Behavior {
   }
 }
 
-export default NewRectBehavior;
+export default NewLineBehavior;

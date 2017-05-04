@@ -36,6 +36,15 @@ class Group extends GraphicalObject {
     children.forEach(child => this.addChild(child));
   }
 
+  removeChild(child) {
+
+    const index = this.children().indexOf(child);
+    this.children().splice(index, 1);
+    child.group(false);
+
+    this.damage(child.getBoundingBox());
+  }
+
   children(i) {
     if (!isNil(i)) return this._children[i];
     return this._children;
@@ -44,6 +53,7 @@ class Group extends GraphicalObject {
   bringChildToFront(child) {
 
 		this.children().splice(this.children().indexOf(child), 1);
+    child.group(false);
 		this.addChild(child);
 
 		this.damage(child.getBoundingBox());

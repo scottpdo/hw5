@@ -33,7 +33,7 @@ class OutlineRect extends GraphicalObject {
 			g = g.group();
 		}
 
-		context.fillStyle = this.color();
+		context.strokeStyle = this.color();
     context.lineWidth = this.lineThickness();
 
 		context.strokeRect(

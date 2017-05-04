@@ -5,10 +5,11 @@ import { isNil } from 'lodash';
 class ChoiceBehavior extends Behavior {
 
   constructor(windowgroup, type = 'single', firstOnly = false) {
-    super();
+
+    super(windowgroup);
+
     this.startEvent(Behavior.defaultStartEvent);
     this.stopEvent(Behavior.defaultStopEvent);
-    this.windowgroup = windowgroup;
 
     this._type = type;
     this._firstOnly = firstOnly;
@@ -31,8 +32,6 @@ class ChoiceBehavior extends Behavior {
 
   start(e) {
 
-    console.log('starting choice b')
-
     let g = this.group();
 		if (isNil(g) || !this.active()) return;
 
@@ -54,8 +53,10 @@ class ChoiceBehavior extends Behavior {
       }
     }
 
+    this.windowgroup.redraw();
+
 		// outside group bounding box, stop
-		// if (!g.contains(x, y)) stop(e);
+		if (!g.contains(x, y)) stop(e);
   }
 
   running(e) {
@@ -80,6 +81,7 @@ class ChoiceBehavior extends Behavior {
   }
 
   stop(e) {
+
     if (e.keyCode === this.cancelKey()) return this.cancel(e);
 
 		const g = this.group();
@@ -120,6 +122,8 @@ class ChoiceBehavior extends Behavior {
 
 		this._initialSelected = null;
 		this.state(false);
+
+    this.windowgroup.redraw();
   }
 
   cancel(e) {
@@ -141,6 +145,8 @@ class ChoiceBehavior extends Behavior {
 
 		this._initialSelected = null;
 		this.state(false);
+
+    this.windowgroup.redraw();
   }
 }
 

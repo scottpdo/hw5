@@ -1,11 +1,12 @@
-import FilledRect from '../objects/FilledRect';
-import OutlineRect from '../objects/OutlineRect';
-import Behavior from './Behavior';
+import ControlledCircle from '../../objects/hw4b/ControlledCircle';
+
+import Behavior from '../Behavior';
+import NewCircleBehavior from '../NewCircleBehavior';
 import { isNil } from 'lodash';
 
-class NewRectBehavior extends Behavior {
+class NewControlledCircleBehavior extends NewCircleBehavior {
 
-  constructor(windowgroup, color, lineThickness = 0) {
+  constructor(windowgroup, color = 'black') {
 
     super(windowgroup);
 
@@ -13,25 +14,13 @@ class NewRectBehavior extends Behavior {
     this.stopEvent(Behavior.defaultStopEvent);
 
     this._color = color;
-    this._lineThickness = lineThickness;
   }
 
   make(x1, y1, x2, y2) {
-    if (this._lineThickness === 0) {
-			return new FilledRect(x1, y1, x2 - x1, y2 - y1, this._color);
-		}
 
-		return new OutlineRect(x1, y1, x2 - x1, y2 - y1, this._color, this._lineThickness);
-  }
+    const r = Math.round(Math.sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1)));
 
-  resize(obj, x1, y1, x2, y2) {
-
-    obj.x(x1);
-    obj.y(y1);
-    obj.width(x2 - x1);
-    obj.height(y2 - y1);
-
-    return obj;
+		return new ControlledCircle(x1, y1, r, this._color);
   }
 
   start(e) {
@@ -96,4 +85,4 @@ class NewRectBehavior extends Behavior {
   }
 }
 
-export default NewRectBehavior;
+export default NewControlledCircleBehavior;

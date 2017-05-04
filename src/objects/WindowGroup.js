@@ -39,11 +39,21 @@ class WindowGroup extends Component {
   }
 
   addEventListeners() {
+
     this.refs.canvas.addEventListener('mousemove', this.scanBehaviors);
     this.refs.canvas.addEventListener('mousedown', this.scanBehaviors);
     this.refs.canvas.addEventListener('mouseup', this.scanBehaviors);
 
     window.addEventListener('keyup', this.scanBehaviors);
+  }
+
+  componentWillUnmount() {
+
+    this.refs.canvas.removeEventListener('mousemove', this.scanBehaviors);
+    this.refs.canvas.removeEventListener('mousedown', this.scanBehaviors);
+    this.refs.canvas.removeEventListener('mouseup', this.scanBehaviors);
+
+    window.removeEventListener('keyup', this.scanBehaviors);
   }
 
   scanBehaviors(e) {

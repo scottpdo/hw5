@@ -5,10 +5,9 @@ import { isNil } from 'lodash';
 class MoveBehavior extends Behavior {
 
   constructor(windowgroup) {
-    super();
+    super(windowgroup);
     this.startEvent(Behavior.defaultStartEvent);
     this.stopEvent(Behavior.defaultStopEvent);
-    this.windowgroup = windowgroup;
   }
 
   start(e) {

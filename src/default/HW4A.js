@@ -5,12 +5,12 @@ import LayoutGroup from '../objects/LayoutGroup';
 import OutlineRect from '../objects/OutlineRect';
 import Button from '../objects/Button';
 
+import NewNodeBehavior from '../behaviors/hw4a/NewNodeBehavior';
+import ConnectNodesBehavior from '../behaviors/hw4a/ConnectNodesBehavior';
 import MoveBehavior from '../behaviors/MoveBehavior';
-import NewRectBehavior from '../behaviors/NewRectBehavior';
-import NewLineBehavior from '../behaviors/NewLineBehavior';
 import ChoiceBehavior from '../behaviors/ChoiceBehavior';
 
-class HW3 extends WindowGroup {
+class HW4A extends WindowGroup {
   componentDidMount() {
 
     this.addEventListeners();
@@ -21,15 +21,13 @@ class HW3 extends WindowGroup {
 
     let menuGroup = new LayoutGroup(20, 20, 180, 600, 'vertical', 20);
 
-    let drawRedBtn = new Button();
-    drawRedBtn.text("Draw Red");
-    let drawBlueBtn = new Button();
-    drawBlueBtn.text("Draw Blue");
-    let drawLineBtn = new Button();
-    drawLineBtn.text("Draw Line");
+    let addNodeBtn = new Button();
+    addNodeBtn.text("Add Node");
+    let drawConnectorBtn = new Button();
+    drawConnectorBtn.text("Connect");
     let moveBtn = new Button();
     moveBtn.text("Move");
-    menuGroup.addChildren(drawRedBtn, drawBlueBtn, drawLineBtn, moveBtn);
+    menuGroup.addChildren(addNodeBtn, drawConnectorBtn, moveBtn);
     this.addChild(menuGroup);
 
     let paintGroup = new Group(200, 20, 600, 600);
@@ -40,29 +38,24 @@ class HW3 extends WindowGroup {
 		cb.group(menuGroup);
     this.addBehavior(cb);
 
-    let nr = new NewRectBehavior(this, 'red');
-    nr.group(paintGroup).active(false);
-    this.addBehavior(nr);
+    let nn = new NewNodeBehavior(this);
+    nn.group(paintGroup).active(false);
+    this.addBehavior(nn);
 
-    let nb = new NewRectBehavior(this, 'blue');
-    nb.group(paintGroup).active(false);
-    this.addBehavior(nb);
-
-    let nl = new NewLineBehavior(this, 'black', 2);
-    nl.group(paintGroup).active(false);
-    this.addBehavior(nl);
+    let ctb = new ConnectNodesBehavior(this);
+    ctb.group(paintGroup).active(false);
+    this.addBehavior(ctb);
 
     let m = new MoveBehavior(this);
     m.group(paintGroup);
     this.addBehavior(m);
 
-    drawRedBtn.selectedBehavior(nr);
-    drawBlueBtn.selectedBehavior(nb);
-    drawLineBtn.selectedBehavior(nl);
+    addNodeBtn.selectedBehavior(nn);
+    drawConnectorBtn.selectedBehavior(ctb);
     moveBtn.selectedBehavior(m);
 
     this.redraw();
   }
 }
 
-export default HW3;
+export default HW4A;
